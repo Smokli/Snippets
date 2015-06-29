@@ -3,8 +3,8 @@ var enableEdit = false;
 $(document).ready(function(){
 	
 	$('#generate-crossword').click(function(){
-		var x = parseInt($('#dimentions input').eq(0).val()),
-				y = parseInt($('#dimentions input').eq(1).val());
+		var x = parseInt($('#control-panel input[type="number"]').eq(0).val()),
+				y = parseInt($('#control-panel input[type="number"]').eq(2).val());
 				
 				x = x > 500 ? 500 : (x < 5 ? 5 : x);
 				y = y > 300 ? 300 : (y < 3 ? 3 : y);
@@ -14,13 +14,15 @@ $(document).ready(function(){
 	
 	
 	function generateCrossword(x,y){
+		if($('#crossword-wrapper')){
+			$('#crossword-wrapper').remove();
+			}
 		var $prevLetter = $();
 		
 	$(document.body).append('<div id="crossword-wrapper"></div>');
 	
-	$('#crossword-wrapper').append('<table id="crossword-puzzle"></table><div id="control-panel"></div>');
-	$('#control-panel').append('<button id="edit-crossword">Edit</button><button id="clear-crossword">Clear</button><button id="start-game">Start</button>');
-	
+	$('#crossword-wrapper').append('<table id="crossword-puzzle"></table>');
+		
 	$('table').prepend('<thead><tr><th colspan="' + x + '">Crossword</th></tr></thead>');
 	$('table').css('height', window.innerHeight);
 	
@@ -28,11 +30,11 @@ $(document).ready(function(){
 		var row = $('<tr>');
 		
 		for(var b = 0; b < x; b++){
-			row.append('<td><span>A</span></td>');
+			row.append('<td><span></span></td>');
 			}
 		$('table').append(row);
 		}
-	
+	$('td').css('width', $('table').width() / $('tr:nth-child(1) td').length);
 	$('td').click(function(ev){
 		
 		if(enableEdit){
@@ -53,9 +55,7 @@ $(document).ready(function(){
 		$prevLetter = $(this);
 		});
 		
-		
-		
-	
+			
 	$('#edit-crossword').click(function(){
 		if(!enableEdit){
 	  $('td').attr('class', '');
@@ -63,11 +63,22 @@ $(document).ready(function(){
 		$('.edit-letter').attr('contenteditable', 'true');
 		}
 		enableEdit = true;
-		});
-	$('#start-game').click(function(){
-		enableEdit = false;
+		$('#clear-crossword').attr('disabled', false);
 		});
 		
+		$('#clear-crossword').click(function(){
+			$('span').html('');
+			});
+		
+	$('#start-game').click(function(){
+		enableEdit = false;
+		$('span').attr('class', '');
+		$('span').attr('contenteditable', 'false');
+		$('#clear-crossword').attr('disabled', true);
+		});
+		
+		$('.disabled').removeAttr('disabled');
+		$('#clear-crossword').attr('disabled', true);
 		setHeights();
 }
 
@@ -77,3 +88,7 @@ function setHeights(){
 	$('span').css('height', height);
 	}
 	
+document.querySelector('#font-size').addEventListener('input', function(){
+	console.log(this.value);
+	$('span').css('font-size', Number(this.value));
+});
