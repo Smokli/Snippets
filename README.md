@@ -21,7 +21,6 @@ $(document).ready(function(){
 	$('#crossword-wrapper').append('<table id="crossword-puzzle"></table><div id="control-panel"></div>');
 	$('#control-panel').append('<button id="edit-crossword">Edit</button><button id="clear-crossword">Clear</button><button id="start-game">Start</button>');
 	
-	console.log(window.innerHeight)
 	$('table').prepend('<thead><tr><th colspan="' + x + '">Crossword</th></tr></thead>');
 	$('table').css('height', window.innerHeight);
 	
@@ -29,34 +28,52 @@ $(document).ready(function(){
 		var row = $('<tr>');
 		
 		for(var b = 0; b < x; b++){
-			row.append('<td><span>111</span></td>');
+			row.append('<td><span>A</span></td>');
 			}
 		$('table').append(row);
 		}
 	
 	$('td').click(function(ev){
 		
+		if(enableEdit){
+			return;
+			}
+		
 		if(this.className === 'selected-letter'){
 			$(this).removeClass('selected-letter');
 			$prevLetter = $();
-			$(this).find('span').animate({'opacity': 1}, 600);
-			}else if($prevLetter.length !== 0){
+			$(this).find('span').animate({'opacity': 1}, 1000);
+			$(this).addClass('revealed-letter');
+			return;
+		}else if($prevLetter.length !== 0){
 			$prevLetter.removeClass('selected-letter');
-			}
-			$(this).addClass('selected-letter');
-			$prevLetter = $(this);
+		}
+		
+		$(this).addClass('selected-letter');
+		$prevLetter = $(this);
 		});
 		
 		
 		
 	
 	$('#edit-crossword').click(function(){
+		if(!enableEdit){
+	  $('td').attr('class', '');
+		$('span').attr('class', 'edit-letter');
+		$('.edit-letter').attr('contenteditable', 'true');
+		}
 		enableEdit = true;
 		});
 	$('#start-game').click(function(){
 		enableEdit = false;
 		});
 		
-		
+		setHeights();
 }
+
+
+function setHeights(){
+	var height = $('td').height();
+	$('span').css('height', height);
+	}
 	
