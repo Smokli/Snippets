@@ -30,7 +30,7 @@ $(document).ready(function(){
 		var row = $('<tr>');
 		
 		for(var b = 0; b < x; b++){
-			row.append('<td><span></span></td>');
+			row.append('<td><span>*</span></td>');
 			}
 		$('table').append(row);
 		}
@@ -41,11 +41,18 @@ $(document).ready(function(){
 			return;
 			}
 		
-		if(this.className === 'selected-letter'){
+		if(this.className === 'selected-letter' && confirm('Ama na 100%?')){
+			
 			$(this).removeClass('selected-letter');
 			$prevLetter = $();
 			$(this).find('span').animate({'opacity': 1}, 1000);
 			$(this).addClass('revealed-letter');
+			
+			if(this.textContent == '*'){
+				//TO DO text za bomba
+				$(this).children().css('color', '#FA5151');
+				}
+				
 			return;
 		}else if($prevLetter.length !== 0){
 			$prevLetter.removeClass('selected-letter');
